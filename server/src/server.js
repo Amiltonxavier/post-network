@@ -346,12 +346,28 @@ app.post('/reactions', { preHandler: [app.authenticate] }, async (request, reply
 // Public route to get reactions for an entity
 app.get('/reactions/:entityId/:entityType', { preHandler: [app.authenticate] }, async (request, reply) => {
   const { entityId, entityType } = request.params;
+
+  // Query para buscar reações com informações do usuário
   const reactions = await db.all(
-    'SELECT * FROM reactions WHERE entityId = ? AND entityType = ?',
+    `
+    SELECT 
+      r.id AS reactionId, 
+      r.type AS reactionType,
+      r.entityId, 
+      r.entityType, 
+      r.userId, 
+      u.fullName AS userFullName, 
+      u.imgUrl AS userImgUrl
+    FROM reactions r
+    JOIN users u ON r.userId = u.id
+    WHERE r.entityId = ? AND r.entityType = ?
+    `,
     [entityId, entityType]
   );
+
   reply.send(reactions);
 });
+
 
 // Initialize server and DB
 const startServer = async () => {

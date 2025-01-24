@@ -1,12 +1,12 @@
 import { api } from "@/lib/axios";
-import { AddReactionRequest, Reaction } from "@/types/react";
+import { AddReactionRequest, ReactionWithUser } from "@/types/react";
 
 export class ReactService {
     async list (
         entityId: number,
         entityType: string,
-      ): Promise<Reaction[]>  {
-        const response = await api.get<Reaction[]>(
+      ): Promise<ReactionWithUser[]>  {
+        const response = await api.get<ReactionWithUser[]>(
           `/reactions/${entityId}/${entityType}`
          
         );

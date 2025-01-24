@@ -16,7 +16,7 @@ import { AvatarImage } from "@radix-ui/react-avatar";
 import { useForm } from "react-hook-form";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { toast } from "sonner";
-import { ProfileService } from "@/services/user.service";
+import { UserService } from "@/services/user.service";
 import { useAuth } from "@/hooks/userAuth";
 
 
@@ -30,7 +30,7 @@ export function EditDialog({
 }) {
   const { user,  } = useUser(); // Certifique-se de que `setUser` está disponível no contexto
   const { getUser} = useAuth()
-  const profileService = new ProfileService();
+  const userService = new UserService();
 
   const {
     register,
@@ -48,13 +48,13 @@ export function EditDialog({
 
   async function onsubmit(data: ProfileFormData) {
     try {
-      await profileService.update(user?.id, data); // Substitua `user.id` pelo identificador correto
+      await userService.update(user?.id, data); // Substitua `user.id` pelo identificador correto
       await getUser()
       toast.success("Perfil atualizado com sucesso!");
       onOpenChange(false); // Feche o diálogo
     } catch (error) {
       console.error("Erro ao atualizar o perfil:", error);
-      toast("Erro ao atualizar o perfil");
+      toast.error("Erro ao atualizar o perfil");
     }
   }
 

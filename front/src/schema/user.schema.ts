@@ -2,12 +2,12 @@ import { z } from "zod";
 
 
 export const UserSchema = z.object({
-    username: z.string().min(3),
+    username: z.string().min(3, "O nome de usuário deve ter pelo menos 3 caracteres."),
     password: z.string()
     .nonempty({ message: "Senha inválida" })
     .min(3, { message: "Senha deve ter ao menos 3 caracteres" }),
-    fullName: z.string().min(8).nonempty({message: "Nome não pode estar vázio"}),
-    imgUrl: z.string().url().optional(),
+    fullName: z.string().min(3, "O nome completo deve ter pelo menos 3 caracteres.").nonempty({message: "Nome não pode estar vázio"}),
+    imgUrl: z.string().url("A URL da imagem deve ser válida").optional(),
     cover: z.string().url().optional(),
     bio: z.string(),
     role: z.string().optional(),

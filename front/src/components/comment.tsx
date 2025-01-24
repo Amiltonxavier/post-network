@@ -113,7 +113,7 @@ export function Comment({ comment }: Props) {
           {/* Reactions Section */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="sm" onClick={handleLike}>
+              {/* <Button variant="ghost" size="sm" onClick={handleLike}>
                 <Heart
                   className={`mr-2 h-4 w-4 ${
                     userReacted ? "text-rose-500" : ""
@@ -121,7 +121,7 @@ export function Comment({ comment }: Props) {
                   fill={userReacted ? "#f43f5e" : ""}
                 />
                 {applauseCount}
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

@@ -10,7 +10,12 @@ import { ReactService } from "@/services/react.service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Comment } from "./comment";
 import { formatDate } from "@/helper/format-date";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface PosterCardProps {
   data: Post;
@@ -79,14 +84,47 @@ export default function PosterCard({ data }: PosterCardProps) {
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-4">
         <div className="flex w-full justify-between">
-          <Button variant="ghost" size="sm" onClick={handleLike}>
-            <Heart className={`mr-2 h-4 w-4 ${reactions && reactions?.length > 0 ? "text-rose-500": ""}`} fill={reactions && reactions?.length > 0 ? "#f43f5e": ""} />
-            {reactions?.filter((r) => r.type === "aplaudir").length ?? 0}
-          </Button>
-          <Button variant="ghost" size="sm">
-            <MessageCircle className="mr-2 h-4 w-4" />
-            {comments?.length ?? 0}
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="sm" onClick={handleLike}>
+                  <Heart className={`mr-2 h-4 w-4 ${reactions && reactions?.length > 0 ? "text-rose-500" : "bg-transparent"}`} fill={reactions && reactions?.length > 0 ? "#f43f5e" : ""} />
+                  {reactions?.filter((r) => r.reactionType === "aplaudir").length ?? 0}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {
+                  reactions?.map((react) => (
+                    <p key={react.entityId}>{react.userFullName}</p>
+
+                  ))
+                }
+
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  {comments?.length ?? 0}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {
+                  comments?.map((comment) => (
+                    <p key={comment.id}>{comment.fullName}</p>
+
+                  ))
+                }
+
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+
           <Button variant="ghost" size="sm">
             <Repeat2 className="mr-2 h-4 w-4" />
             Repost
@@ -94,27 +132,27 @@ export default function PosterCard({ data }: PosterCardProps) {
         </div>
         <form onSubmit={handleAddComment} className="flex w-full gap-2">
 
-                    <div className="w-full relative flex justify-between gap-2">
-                    <Input
-                        placeholder="Write comments here......."
-                        className="w-full py-3 px-5 rounded-lg border border-gray-300 bg-white shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] focus:outline-none text-gray-900 placeholder-gray-400 text-lg font-normal leading-relaxed"
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                      />
-                        
-                        <Button  type="submit" variant={"ghost"} className="absolute right-0 top-0">
-                            <SendIcon />
-                        </Button>
-                    </div>
+          <div className="w-full relative flex justify-between gap-2">
+            <Input
+              placeholder="Write comments here......."
+              className="w-full py-3 px-5 rounded-lg border border-gray-300 bg-white shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] focus:outline-none text-gray-900 placeholder-gray-400 text-lg font-normal leading-relaxed"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+
+            <Button type="submit" variant={"ghost"} className="absolute right-0 top-0">
+              <SendIcon />
+            </Button>
+          </div>
 
         </form>
-          {comments?.map((comment) => (
-            <div key={comment.id} className="flex flex-col divide-y divide-zinc-200 w-full">
-            <Comment  comment={comment} />
-            </div>
+        {comments?.map((comment) => (
+          <div key={comment.id} className="flex flex-col divide-y divide-zinc-200 w-full">
+            <Comment comment={comment} />
+          </div>
 
         ))}
-    
+
       </CardFooter>
     </Card>
   );
